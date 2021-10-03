@@ -5,6 +5,8 @@
         "checkJs": false, // ts-check와 똑같은 기능
         "outDir": "./built",   // 결과물을 저장하는 경로
         "moduleResolution": "Node", // Promise 를 인식하기 위한 코드
+        "lib": ["ES2015","DOM","DOM.Iterable"],       // Promise 를 인식하기 위한 코드
+        "noImplicitAny": true   // 적어도 Any라는 타입을 지정해라
     },
     "include":["./src/**/*"]    // 프로젝트 기준으로 어떤 폴더들을 타입스크립트로 컴파일시킬 것인가
 }
