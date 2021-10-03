@@ -7,10 +7,12 @@ function getUnixTimestamp(date:Date | string | number):number {    // new Date�
 }
 
 // DOM
-const confirmedTotal = $('.confirmed-total');
-const deathsTotal = $('.deaths');
-const recoveredTotal = $('.recovered');
-const lastUpdatedTime = $('.last-updated-time');
+const confirmedTotal = $('.confirmed-total') as HTMLSpanElement;
+const deathsTotal = $('.deaths') as HTMLParagraphElement;
+// const deathsTotal: HTMLParagraphElement = $('.deaths');  // 이렇게 하면 에러가 난다. 오른쪽 값은 element이고 왼쪽값은 HTMLParagraphElement인데 범위가 큰 쪽이 작은 쪽으로 대입할 수 없다.
+// 그 이유는 element에서는 없는 메소드에는 HTMLParagraphElement에는 갖고있고 사용할 수 있어야 하기 때문이다.
+const recoveredTotal = $('.recovered') as HTMLParagraphElement;
+const lastUpdatedTime = $('.last-updated-time') as HTMLParagraphElement;
 const rankList = $('.rank-list');
 const deathsList = $('.deaths-list');
 const recoveredList = $('.recovered-list');
@@ -84,7 +86,7 @@ async function handleListClick(event:any) {
   clearRecoveredList();
   startLoadingAnimation();
   isDeathLoading = true;
-  const { data: deathResponse } = await fetchCountryInfo(selectedId, CovidStatus.Deaths);
+  const { data: deathResponse } = await fetchCountryInfo(selectedId, CovidStatus.Deaths);   // fetchCountryInfo의 입력값이 이제는 CovidStatus enum 타입을 받으니 이렇게 변경해야 한다.
   const { data: recoveredResponse } = await fetchCountryInfo(
     selectedId,
     CovidStatus.Recovered,
@@ -123,10 +125,15 @@ function setDeathsList(data:any) {
 function clearDeathList() {
   deathsList.innerHTML = null;
 }
-
+// Element 타입에는 innerText가 없다. 
+// why? deathsTotal은 위에 보시면 death라는 class의 css선택자이다. 이것을 index.html에서 찾아보면 p태그를 말한다. 
+// 이런 DOM 요소들은 Element속성을 갖고 있다.
+// 정확히 말하자면 Element | HTMLElement | HTMLParagraphElement 이고
+// Element ->  HTMLElement -> HTMLParagraphElement 구조로 상속받았다.
 function setTotalDeathsByCountry(data:any) {
   deathsTotal.innerText = data[0].Cases;
 }
+
 
 function setRecoveredList(data:any) {
   const sorted = data.sort(
