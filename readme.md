@@ -7,9 +7,9 @@
 ### 자바스크립트 프로젝트에 타입스크립트 적용하는 방법
 
 0. 자바스크립트 파일에 JSDoc으로 타입 시스템 입히기
-1. 타입스크립트의 기본 환경 구성
-- NPM 초기화 ( npm init -y )
-- 타입스크립트 라이브러리 설치
+1. 타입스크립트의 기본 환경 구성  
+- NPM 초기화 ( npm init -y )  
+- 타입스크립트 라이브러리 설치  
 ```sh
 npm i -D typescript @babel/core @babel/preset-env @babel/preset-typescript @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint prettier eslint-plugin-prettier
 ```
@@ -48,6 +48,35 @@ module.exports = {
   },
 };
 ```
+- VSCode ESLint 플러그인 설정 추가
+
+1. VSCode의 [ESLint 플러그인](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) 설치
+2. VSCode에서 `ctrl` + `shift` + `p` / `cmd` + `shift` + `p` 키를 이용하여 명령어 실행 창 표시
+3. 명령어 실행 창에 `open settings (json)` 입력 후 선택
+
+![find-user-settings-on-command-palette](./command-palette.png)
+4. VSCode 사용자 정의 파일인 `settings.json` 파일의 내용에 아래와 같이 ESLint 플러그인 관련 설정 추가.
+
+```js
+{
+  // ... <-- 기존 내용을 꼭 유지한 상태에서 아래 내용을 추가하고 이 주석은 제거할 것
+  "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+  },
+  "eslint.alwaysShowStatus": true,
+  "eslint.workingDirectories": [
+      {"mode": "auto"}
+  ],
+  "eslint.validate": [
+      "javascript",
+      "typescript"
+  ],
+}
+```
+5. `ctrl` + `,` 또는 `cmd` + `,` 눌러서 VSCode 설정 파일(Settings)에 들어간 후 `format on save` 검색. 아래와 같이 체크가 안되어 있는지 확인.
+![format-on-save-off](./format-on-save-off.png)  
+pretteir 같이 코드를 정리해주는 다른 것들과 충돌이 일어나지 않게 하기 위함.
+
 - 자바스크립트 파일을 타입스크립트 파일로 변환 ( .js => .ts )
 - package.json 파일에 "build" : "tsc" 명령어 추가  
 2. 명시적인 `any` 선언하기
