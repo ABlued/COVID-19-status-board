@@ -1,9 +1,10 @@
 // utils
-function $(selector:string) {
+function $(selector: string) {
   return document.querySelector(selector);
 }
-function getUnixTimestamp(date:Date | string | number):number {    // new Date는 Date | string | number 속성을 받아야한다.
-  return new Date(date).getTime();    //getTime() 는 number 반환한다. 그래서 출력값은 number 타입이다.
+function getUnixTimestamp(date: Date | string | number): number {
+  // new Date는 Date | string | number 속성을 받아야한다.
+  return new Date(date).getTime(); //getTime() 는 number 반환한다. 그래서 출력값은 number 타입이다.
 }
 
 // DOM
@@ -19,12 +20,12 @@ const recoveredList = $('.recovered-list');
 const deathSpinner = createSpinnerElement('deaths-spinner');
 const recoveredSpinner = createSpinnerElement('recovered-spinner');
 
-function createSpinnerElement(id:any) {
+function createSpinnerElement(id: any) {
   const wrapperDiv = document.createElement('div');
   wrapperDiv.setAttribute('id', id);
   wrapperDiv.setAttribute(
     'class',
-    'spinner-wrapper flex justify-center align-center',
+    'spinner-wrapper flex justify-center align-center'
   );
   const spinnerDiv = document.createElement('div');
   spinnerDiv.setAttribute('class', 'ripple-spinner');
@@ -36,7 +37,7 @@ function createSpinnerElement(id:any) {
 
 // state
 let isDeathLoading = false;
-let isRecoveredLoading = false;
+const isRecoveredLoading = false;
 
 // api
 function fetchCovidSummary() {
@@ -47,11 +48,11 @@ function fetchCovidSummary() {
 enum CovidStatus {
   Comfirmed = 'confirmed',
   Recovered = 'recovered',
-  Deaths = 'deaths'
+  Deaths = 'deaths',
 }
 // API에 대한 설명 : https://documenter.getpostman.com/view/10808728/SzS8rjbc?version=latest#63fda84a-6b43-4506-9cc7-2172561d5c16
 // coutryCode는 AF, US 등을 말한다.
-function fetchCountryInfo(countryCode:string, status:CovidStatus) {
+function fetchCountryInfo(countryCode: string, status: CovidStatus) {
   // status params: confirmed, recovered, deaths
   const url = `https://api.covid19api.com/country/${countryCode}/status/${status}`;
   return axios.get(url);
@@ -68,7 +69,7 @@ function initEvents() {
   rankList.addEventListener('click', handleListClick);
 }
 
-async function handleListClick(event:any) {
+async function handleListClick(event: any) {
   let selectedId;
   if (
     event.target instanceof HTMLParagraphElement ||
@@ -86,14 +87,17 @@ async function handleListClick(event:any) {
   clearRecoveredList();
   startLoadingAnimation();
   isDeathLoading = true;
-  const { data: deathResponse } = await fetchCountryInfo(selectedId, CovidStatus.Deaths);   // fetchCountryInfo의 입력값이 이제는 CovidStatus enum 타입을 받으니 이렇게 변경해야 한다.
+  const { data: deathResponse } = await fetchCountryInfo(
+    selectedId,
+    CovidStatus.Deaths
+  ); // fetchCountryInfo의 입력값이 이제는 CovidStatus enum 타입을 받으니 이렇게 변경해야 한다.
   const { data: recoveredResponse } = await fetchCountryInfo(
     selectedId,
-    CovidStatus.Recovered,
+    CovidStatus.Recovered
   );
   const { data: confirmedResponse } = await fetchCountryInfo(
     selectedId,
-    CovidStatus.Comfirmed,
+    CovidStatus.Comfirmed
   );
   endLoadingAnimation();
   setDeathsList(deathResponse);
@@ -104,11 +108,12 @@ async function handleListClick(event:any) {
   isDeathLoading = false;
 }
 
-function setDeathsList(data:any) {
+function setDeathsList(data: any) {
   const sorted = data.sort(
-    (a:any, b:any) => getUnixTimestamp(b.Date) - getUnixTimestamp(a.Date),
+    (a: any, b: any) => getUnixTimestamp(b.Date) - getUnixTimestamp(a.Date)
   );
-  sorted.forEach((value:any) => {   // forEach, map 함수 내에 입력인자에 타입설정은 한 가지만 들어있다하더라도 () 소괄호를 쳐주어야 한다. 안그러면 에러가 일어난다.
+  sorted.forEach((value: any) => {
+    // forEach, map 함수 내에 입력인자에 타입설정은 한 가지만 들어있다하더라도 () 소괄호를 쳐주어야 한다. 안그러면 에러가 일어난다.
     const li = document.createElement('li');
     li.setAttribute('class', 'list-item-b flex align-center');
     const span = document.createElement('span');
@@ -125,21 +130,20 @@ function setDeathsList(data:any) {
 function clearDeathList() {
   deathsList.innerHTML = null;
 }
-// Element 타입에는 innerText가 없다. 
-// why? deathsTotal은 위에 보시면 death라는 class의 css선택자이다. 이것을 index.html에서 찾아보면 p태그를 말한다. 
+// Element 타입에는 innerText가 없다.
+// why? deathsTotal은 위에 보시면 death라는 class의 css선택자이다. 이것을 index.html에서 찾아보면 p태그를 말한다.
 // 이런 DOM 요소들은 Element속성을 갖고 있다.
 // 정확히 말하자면 Element | HTMLElement | HTMLParagraphElement 이고
 // Element ->  HTMLElement -> HTMLParagraphElement 구조로 상속받았다.
-function setTotalDeathsByCountry(data:any) {
+function setTotalDeathsByCountry(data: any) {
   deathsTotal.innerText = data[0].Cases;
 }
 
-
-function setRecoveredList(data:any) {
+function setRecoveredList(data: any) {
   const sorted = data.sort(
-    (a:any, b:any) => getUnixTimestamp(b.Date) - getUnixTimestamp(a.Date),
+    (a: any, b: any) => getUnixTimestamp(b.Date) - getUnixTimestamp(a.Date)
   );
-  sorted.forEach((value:any) => {
+  sorted.forEach((value: any) => {
     const li = document.createElement('li');
     li.setAttribute('class', 'list-item-b flex align-center');
     const span = document.createElement('span');
@@ -157,7 +161,7 @@ function clearRecoveredList() {
   recoveredList.innerHTML = null;
 }
 
-function setTotalRecoveredByCountry(data:any) {
+function setTotalRecoveredByCountry(data: any) {
   recoveredTotal.innerText = data[0].Cases;
 }
 
@@ -180,8 +184,8 @@ async function setupData() {
   setLastUpdatedTimestamp(data);
 }
 
-function renderChart(data:any, labels:any) {
-  var ctx = $('#lineChart').getContext('2d');
+function renderChart(data: any, labels: any) {
+  const ctx = $('#lineChart').getContext('2d');
   Chart.defaults.color = '#f5eaea';
   Chart.defaults.font.family = 'Exo 2';
   new Chart(ctx, {
@@ -201,40 +205,42 @@ function renderChart(data:any, labels:any) {
   });
 }
 
-function setChartData(data:any) {
-  const chartData = data.slice(-14).map((value:any) => value.Cases);
+function setChartData(data: any) {
+  const chartData = data.slice(-14).map((value: any) => value.Cases);
   const chartLabel = data
     .slice(-14)
-    .map((value:any) => new Date(value.Date).toLocaleDateString().slice(5, -1));
+    .map((value: any) =>
+      new Date(value.Date).toLocaleDateString().slice(5, -1)
+    );
   renderChart(chartData, chartLabel);
 }
 
-function setTotalConfirmedNumber(data:any) {
+function setTotalConfirmedNumber(data: any) {
   confirmedTotal.innerText = data.Countries.reduce(
-    (total:any, current:any) => (total += current.TotalConfirmed),
-    0,
+    (total: any, current: any) => (total += current.TotalConfirmed),
+    0
   );
 }
 
-function setTotalDeathsByWorld(data:any) {
+function setTotalDeathsByWorld(data: any) {
   deathsTotal.innerText = data.Countries.reduce(
-    (total:any, current:any) => (total += current.TotalDeaths),
-    0,
+    (total: any, current: any) => (total += current.TotalDeaths),
+    0
   );
 }
 
-function setTotalRecoveredByWorld(data:any) {
+function setTotalRecoveredByWorld(data: any) {
   recoveredTotal.innerText = data.Countries.reduce(
-    (total:any, current:any) => (total += current.TotalRecovered),
-    0,
+    (total: any, current: any) => (total += current.TotalRecovered),
+    0
   );
 }
 
-function setCountryRanksByConfirmedCases(data:any) {
+function setCountryRanksByConfirmedCases(data: any) {
   const sorted = data.Countries.sort(
-    (a:any, b:any) => b.TotalConfirmed - a.TotalConfirmed,
+    (a: any, b: any) => b.TotalConfirmed - a.TotalConfirmed
   );
-  sorted.forEach((value:any) => {
+  sorted.forEach((value: any) => {
     const li = document.createElement('li');
     li.setAttribute('class', 'list-item flex align-center');
     li.setAttribute('id', value.Slug);
@@ -250,7 +256,7 @@ function setCountryRanksByConfirmedCases(data:any) {
   });
 }
 
-function setLastUpdatedTimestamp(data:any) {
+function setLastUpdatedTimestamp(data: any) {
   lastUpdatedTime.innerText = new Date(data.Date).toLocaleString();
 }
 
