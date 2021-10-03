@@ -1,9 +1,9 @@
 // utils
-function $(selector:any) {
+function $(selector:string) {
   return document.querySelector(selector);
 }
-function getUnixTimestamp(date:any) {
-  return new Date(date).getTime();
+function getUnixTimestamp(date:Date | string | number):number {    // new Date는 Date | string | number 속성을 받아야한다.
+  return new Date(date).getTime();    //getTime() 는 number 반환한다. 그래서 출력값은 number 타입이다.
 }
 
 // DOM
@@ -42,8 +42,15 @@ function fetchCovidSummary() {
   return axios.get(url);
 }
 
-function fetchCountryInfo(countryCode:any, status:any) {
-  // params: confirmed, recovered, deaths
+enum CovidStatus {
+  Comfirmed = 'confirmed',
+  Recovered = 'recovered',
+  Deaths = 'deaths'
+}
+// API에 대한 설명 : https://documenter.getpostman.com/view/10808728/SzS8rjbc?version=latest#63fda84a-6b43-4506-9cc7-2172561d5c16
+// coutryCode는 AF, US 등을 말한다.
+function fetchCountryInfo(countryCode:string, status:CovidStatus) {
+  // status params: confirmed, recovered, deaths
   const url = `https://api.covid19api.com/country/${countryCode}/status/${status}`;
   return axios.get(url);
 }
@@ -77,14 +84,14 @@ async function handleListClick(event:any) {
   clearRecoveredList();
   startLoadingAnimation();
   isDeathLoading = true;
-  const { data: deathResponse } = await fetchCountryInfo(selectedId, 'deaths');
+  const { data: deathResponse } = await fetchCountryInfo(selectedId, CovidStatus.Deaths);
   const { data: recoveredResponse } = await fetchCountryInfo(
     selectedId,
-    'recovered',
+    CovidStatus.Recovered,
   );
   const { data: confirmedResponse } = await fetchCountryInfo(
     selectedId,
-    'confirmed',
+    CovidStatus.Comfirmed,
   );
   endLoadingAnimation();
   setDeathsList(deathResponse);
