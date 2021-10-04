@@ -7,6 +7,7 @@ function getUnixTimestamp(date: Date | string | number): number {
   return new Date(date).getTime(); //getTime() 는 number 반환한다. 그래서 출력값은 number 타입이다.
 }
 
+const a = 10;
 // DOM
 const confirmedTotal = $('.confirmed-total') as HTMLSpanElement;
 const deathsTotal = $('.deaths') as HTMLParagraphElement;

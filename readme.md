@@ -54,7 +54,7 @@ module.exports = {
 2. VSCode에서 `ctrl` + `shift` + `p` / `cmd` + `shift` + `p` 키를 이용하여 명령어 실행 창 표시
 3. 명령어 실행 창에 `open settings (json)` 입력 후 선택
 
-![find-user-settings-on-command-palette](./command-palette.png)
+![find-user-settings-on-command-palette](https://github.com/joshua1988/learn-typescript/blob/master/setup/command-palette.png?raw=true)
 4. VSCode 사용자 정의 파일인 `settings.json` 파일의 내용에 아래와 같이 ESLint 플러그인 관련 설정 추가.
 
 ```js
@@ -74,7 +74,7 @@ module.exports = {
 }
 ```
 5. `ctrl` + `,` 또는 `cmd` + `,` 눌러서 VSCode 설정 파일(Settings)에 들어간 후 `format on save` 검색. 아래와 같이 체크가 안되어 있는지 확인.
-![format-on-save-off](./format-on-save-off.png)  
+![format-on-save-off](https://raw.githubusercontent.com/joshua1988/learn-typescript/master/setup/format-on-save-off.png)  
 pretteir 같이 코드를 정리해주는 다른 것들과 충돌이 일어나지 않게 하기 위함.
 
 - 자바스크립트 파일을 타입스크립트 파일로 변환 ( .js => .ts )
