@@ -6,7 +6,8 @@
         "outDir": "./built",   // 결과물을 저장하는 경로
         "moduleResolution": "Node", // Promise 를 인식하기 위한 코드
         "lib": ["ES2015","DOM","DOM.Iterable"],       // Promise 를 인식하기 위한 코드
-        "noImplicitAny": true   // 적어도 Any라는 타입을 지정해라
+        "noImplicitAny": true,   // 적어도 Any라는 타입을 지정해라
+        "typeRoots": ["./node_modules/@types", "types"]  // node_modulses 안 @types를 다 확인하여 그 안에 있는 index.d.ts파일을 갖고온다. 이 방법을 통해 개발자가 임의로 지정할 수 있다.
     },
     "include":["./src/**/*"]    // 프로젝트 기준으로 어떤 폴더들을 타입스크립트로 컴파일시킬 것인가
 }
