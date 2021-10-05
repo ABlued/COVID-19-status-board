@@ -1,9 +1,10 @@
 // 라이브러리 로딩
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 // axios는 타입스크립트 개발자를 위해 index.d.ts를 통해 라이브러리가 타입스크립트에도 최적화되어있다.
 import * as Chart from 'chart.js';
 // chart.js 라이브러리는 node_modules/chart.js/dist/chart.js에 타입 설정이 잘 되어있지 않아 그냥 쓰게 되면 오류가 일어난다.
 // 그래서 타입 설정 라이브러리인 @types/chart.js를 별도로 설치해야 한다. npm i @types/chart.js
+import { CovidSummaryResponse, CountrySummaryResponse } from './covid/index';
 // utils
 function $(selector: string) {
   return document.querySelector(selector);
@@ -46,11 +47,12 @@ let isDeathLoading = false;
 const isRecoveredLoading = false;
 
 // api
-function fetchCovidSummary() {
+function fetchCovidSummary(): Promise<AxiosResponse<CovidSummaryResponse>> {
   const url = 'https://api.covid19api.com/summary';
   return axios.get(url);
 }
-
+fetchCovidSummary().then(res => res.data);
+// res.data의 속성이 CovidSummaryResponse 로 나타난다.
 enum CovidStatus {
   Comfirmed = 'confirmed',
   Recovered = 'recovered',
@@ -58,7 +60,10 @@ enum CovidStatus {
 }
 // API에 대한 설명 : https://documenter.getpostman.com/view/10808728/SzS8rjbc?version=latest#63fda84a-6b43-4506-9cc7-2172561d5c16
 // coutryCode는 AF, US 등을 말한다.
-function fetchCountryInfo(countryCode: string, status: CovidStatus) {
+function fetchCountryInfo(
+  countryCode: string,
+  status: CovidStatus
+): Promise<AxiosResponse<CountrySummaryResponse>> {
   // status params: confirmed, recovered, deaths
   const url = `https://api.covid19api.com/country/${countryCode}/status/${status}`;
   return axios.get(url);
