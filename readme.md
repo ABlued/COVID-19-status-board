@@ -101,12 +101,33 @@ module.exports = {
 
 - 자바스크립트 파일을 타입스크립트 파일로 변환 ( .js => .ts )
 - package.json 파일에 "build" : "tsc" 명령어 추가
+
   1. 명시적인 `any` 선언하기
+
   - `tsconfig.json` 파일에 `noImplicitAny` 값을 `true`로 추가
   - 가능한 구체적인 타입으로 타입 정의
+
   2. 프로젝트 환경 구성
+
   - babel, eslint, prettier 등의 환경 설정
+
   3. 외부 라이브러리 모듈화
+  4. tsconfig.json의 `strinct` 옵션 추가 후 타입 정의<br>
+     아래의 조건들이 true가 된다.[상세링크](https://www.typescriptlang.org/tsconfig#strict)
+
+     <br>
+
+  ```
+  "strict" : true,
+  "strictNullChecks" : true,
+  "strictFunctionTypes" : true,
+  "strcitBaindCallApply" : true,
+  "strictPropertyInitialzation" : true,
+  "noImplicitThis" : true,
+  "alwaysStrict" : true,
+  ```
+
+<br>
 
 ### 자바스크립트 프로젝트에 타입스크립트 적용하는 절차
 
@@ -123,17 +144,19 @@ module.exports = {
 - 타입스크립트 설정 파일 tsconfig.json을 생성하고 기본 값을 추가합니다.
 
 ```
+
 {
-  "compilerOptions": {
-    "allowJs": true,
-    "target": "ES5",
-    "outDir": "./dist",
-    "moduleResolution": "Node",
-    "lib": ["ES2015", "DOM", "DOM.Iterable"]
-  },
-  "include": ["./src/**/*"],
-  "exclude": ["node_modules", "dist"]
+"compilerOptions": {
+"allowJs": true,
+"target": "ES5",
+"outDir": "./dist",
+"moduleResolution": "Node",
+"lib": ["ES2015", "DOM", "DOM.Iterable"]
+},
+"include": ["./src/**/*"],
+"exclude": ["node_modules", "dist"]
 }
+
 ```
 
 - 서비스 코드가 포함된 자바스크립트 파일을 타입스크립트 파일로 변환합니다.
@@ -161,16 +184,22 @@ module.exports = {
 - 타입스크립트 설정 파일에 아래 설정을 추가합니다.
 
 ```
+
 {
-  "strict": true,
-  "strictNullChecks": true,
-  "strictFunctionTypes": true,
-  "strictBindCallApply": true,
-  "strictPropertyInitialization": true,
-  "noImplicitThis": true,
-  "alwaysStrict": true,
+"strict": true,
+"strictNullChecks": true,
+"strictFunctionTypes": true,
+"strictBindCallApply": true,
+"strictPropertyInitialization": true,
+"noImplicitThis": true,
+"alwaysStrict": true,
 }
+
 ```
 
 - any로 되어 있는 타입을 최대한 더 적절한 타입으로 변환합니다.
 - as와 같은 키워드를 최대한 사용하지 않도록 고민해서 변경합니다.
+
+```
+
+```

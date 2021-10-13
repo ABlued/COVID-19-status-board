@@ -1,7 +1,7 @@
 // 라이브러리 로딩
 import axios, { AxiosResponse } from 'axios';
 // axios는 타입스크립트 개발자를 위해 index.d.ts를 통해 라이브러리가 타입스크립트에도 최적화되어있다.
-import * as Chart from 'chart.js';
+import Chart from 'chart.js';
 // chart.js 라이브러리는 node_modules/chart.js/dist/chart.js에 타입 설정이 잘 되어있지 않아 그냥 쓰게 되면 오류가 일어난다.
 // 그래서 타입 설정 라이브러리인 @types/chart.js를 별도로 설치해야 한다. npm i @types/chart.js
 import {
@@ -32,7 +32,7 @@ const recoveredList = $('.recovered-list');
 const deathSpinner = createSpinnerElement('deaths-spinner');
 const recoveredSpinner = createSpinnerElement('recovered-spinner');
 
-function createSpinnerElement(id: any) {
+function createSpinnerElement(id: string) {
   const wrapperDiv = document.createElement('div');
   wrapperDiv.setAttribute('id', id);
   wrapperDiv.setAttribute(
@@ -49,7 +49,6 @@ function createSpinnerElement(id: any) {
 
 // state
 let isDeathLoading = false;
-const isRecoveredLoading = false;
 
 // api
 function fetchCovidSummary(): Promise<AxiosResponse<CovidSummaryResponse>> {
@@ -202,8 +201,8 @@ async function setupData() {
   setLastUpdatedTimestamp(data);
 }
 
-function renderChart(data: any, labels: any) {
-  const ctx = $('#lineChart').getContext('2d');
+function renderChart(data: number[], labels: string[]) {
+  const ctx = ($('#lineChart') as HTMLCanvasElement).getContext('2d');
   Chart.defaults.color = '#f5eaea';
   Chart.defaults.font.family = 'Exo 2';
   new Chart(ctx, {
@@ -223,11 +222,13 @@ function renderChart(data: any, labels: any) {
   });
 }
 
-function setChartData(data: any) {
-  const chartData = data.slice(-14).map((value: any) => value.Cases);
+function setChartData(data: CountrySummaryResponse) {
+  const chartData = data
+    .slice(-14)
+    .map((value: CoutrySummaryInfo) => value.Cases);
   const chartLabel = data
     .slice(-14)
-    .map((value: any) =>
+    .map((value: CoutrySummaryInfo) =>
       new Date(value.Date).toLocaleDateString().slice(5, -1)
     );
   renderChart(chartData, chartLabel);
