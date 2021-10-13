@@ -65,11 +65,11 @@ enum CovidStatus {
 // API에 대한 설명 : https://documenter.getpostman.com/view/10808728/SzS8rjbc?version=latest#63fda84a-6b43-4506-9cc7-2172561d5c16
 // coutryCode는 AF, US 등을 말한다.
 function fetchCountryInfo(
-  countryName: string,
+  countryName: string | undefined, // 그래서 여기에다 undefined를 추가한다.
   status: CovidStatus
 ): Promise<AxiosResponse<CountrySummaryResponse>> {
   // status params: confirmed, recovered, deaths
-  const url = `https://api.covid19api.com/country/${countryName}/status/${status}`;
+  const url = `https://api.covid19api.com/country/${countryName}/status/${status}`; // 그러면 이 url에 undefined가 들어갈 수 있으니 이 점 주의해야한다.
   return axios.get(url);
 }
 
@@ -81,16 +81,22 @@ function startApp() {
 
 // events
 function initEvents() {
+  // null 을 받을 수 있으니 null 처리를 해야한다.
+  if (!rankList) {
+    return;
+  }
   rankList.addEventListener('click', handleListClick);
 }
 
-async function handleListClick(event: MouseEvent) {
+async function handleListClick(event: Event) {
   let selectedId;
   if (
     event.target instanceof HTMLParagraphElement ||
     event.target instanceof HTMLSpanElement
   ) {
-    selectedId = event.target.parentElement.id;
+    selectedId = event.target.parentElement // null 처리
+      ? event.target.parentElement.id
+      : undefined;
   }
   if (event.target instanceof HTMLLIElement) {
     selectedId = event.target.id;
@@ -103,7 +109,7 @@ async function handleListClick(event: MouseEvent) {
   startLoadingAnimation();
   isDeathLoading = true;
   const { data: deathResponse } = await fetchCountryInfo(
-    selectedId,
+    selectedId, // 앞에서 string || undefined 형식으로 받을 수 있다고 처리했지만 fetchCountryInfo함수에서는 string만 받는다라고 했으니 오류가 일어난다.
     CovidStatus.Deaths
   ); // fetchCountryInfo의 입력값이 이제는 CovidStatus enum 타입을 받으니 이렇게 변경해야 한다.
   const { data: recoveredResponse } = await fetchCountryInfo(

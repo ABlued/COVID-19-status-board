@@ -188,7 +188,7 @@ module.exports = {
 {
 "strict": true,
 "strictNullChecks": true,
-"strictFunctionTypes": true,
+"strictFunctionTypes": true, // 함수의 타입까지 엄격한 검사를 한다.
 "strictBindCallApply": true,
 "strictPropertyInitialization": true,
 "noImplicitThis": true,
