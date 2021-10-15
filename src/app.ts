@@ -27,7 +27,7 @@ const deathsTotal = $('.deaths') as HTMLParagraphElement;
 const recoveredTotal = $('.recovered') as HTMLParagraphElement;
 const lastUpdatedTime = $('.last-updated-time') as HTMLParagraphElement;
 const rankList = $('.rank-list');
-const deathsList = $('.deaths-list');
+const deathsList = $('.deaths-list'); // 기본적으로 querySelector를 이용하면 반환객체가 Element나 null타입으로 추론된다. 이때 null타입처리를 해야한다.
 const recoveredList = $('.recovered-list');
 const deathSpinner = createSpinnerElement('deaths-spinner');
 const recoveredSpinner = createSpinnerElement('recovered-spinner');
@@ -145,7 +145,9 @@ function setDeathsList(data: CountrySummaryResponse) {
     p.textContent = new Date(value.Date).toLocaleDateString().slice(0, -1);
     li.appendChild(span);
     li.appendChild(p);
-    deathsList.appendChild(li);
+
+    deathsList!.appendChild(li); // !는 type assertion으로 null이 아니면 ! 뒤에 오는 것을 실행하는 지정자이다.
+    // 그렇지만 !나 as같은 type assertion을 남발하면 안된다. null이 아닌 빈 객체 {} 가 들어와도 오류를 띄지 않기 때문이다.
   });
 }
 
