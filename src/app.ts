@@ -26,9 +26,9 @@ const deathsTotal = $('.deaths') as HTMLParagraphElement;
 // 그 이유는 element에서는 없는 메소드에는 HTMLParagraphElement에는 갖고있고 사용할 수 있어야 하기 때문이다.
 const recoveredTotal = $('.recovered') as HTMLParagraphElement;
 const lastUpdatedTime = $('.last-updated-time') as HTMLParagraphElement;
-const rankList = $('.rank-list');
-const deathsList = $('.deaths-list'); // 기본적으로 querySelector를 이용하면 반환객체가 Element나 null타입으로 추론된다. 이때 null타입처리를 해야한다.
-const recoveredList = $('.recovered-list');
+const rankList = $('.rank-list') as HTMLOListElement;
+const deathsList = $('.deaths-list') as HTMLOListElement; // 기본적으로 querySelector를 이용하면 반환객체가 Element나 null타입으로 추론된다. 이때 null타입처리를 해야한다.
+const recoveredList = $('.recovered-list') as HTMLOListElement;
 const deathSpinner = createSpinnerElement('deaths-spinner');
 const recoveredSpinner = createSpinnerElement('recovered-spinner');
 
@@ -152,7 +152,10 @@ function setDeathsList(data: CountrySummaryResponse) {
 }
 
 function clearDeathList() {
-  deathsList.innerHTML = null;
+  if (!deathsList) {
+    return;
+  }
+  deathsList.innerHTML = '';
 }
 // Element 타입에는 innerText가 없다.
 // why? deathsTotal은 위에 보시면 death라는 class의 css선택자이다. 이것을 index.html에서 찾아보면 p태그를 말한다.
@@ -178,12 +181,18 @@ function setRecoveredList(data: CountrySummaryResponse) {
     p.textContent = new Date(value.Date).toLocaleDateString().slice(0, -1);
     li.appendChild(span);
     li.appendChild(p);
-    recoveredList.appendChild(li);
+    recoveredList?.appendChild(li); // ?는 옵셔널 체이닝 오퍼레이터(optional chaining operator)이다.
+    // if(recoveredList === null || recoveredList === undefined){
+    //   return;
+    // } else {
+    //   recoveredList.appendChild(li);
+    // }
+    // 옵셔널 체이닝은 이 코드와 유사하다.
   });
 }
 
 function clearRecoveredList() {
-  recoveredList.innerHTML = null;
+  recoveredList.innerHTML = '';
 }
 
 function setTotalRecoveredByCountry(data: CountrySummaryResponse) {
