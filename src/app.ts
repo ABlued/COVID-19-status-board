@@ -11,8 +11,10 @@ import {
   CoutrySummaryInfo,
 } from './covid/index';
 // utils
-function $(selector: string) {
-  return document.querySelector(selector);
+function $<T extends HTMLElement = HTMLDivElement>(selector: string) {
+  // 제네릭의 = 을 붙여서 기본타입을 지정할 수 있다.
+  const element = document.querySelector(selector);
+  return element as T;
 }
 function getUnixTimestamp(date: Date | string | number): number {
   // new Date는 Date | string | number 속성을 받아야한다.
@@ -20,15 +22,15 @@ function getUnixTimestamp(date: Date | string | number): number {
 }
 
 // DOM
-const confirmedTotal = $('.confirmed-total') as HTMLSpanElement;
-const deathsTotal = $('.deaths') as HTMLParagraphElement;
+const confirmedTotal = $<HTMLSpanElement>('.confirmed-total');
+const deathsTotal = $<HTMLParagraphElement>('.deaths');
 // const deathsTotal: HTMLParagraphElement = $('.deaths');  // 이렇게 하면 에러가 난다. 오른쪽 값은 element이고 왼쪽값은 HTMLParagraphElement인데 범위가 큰 쪽이 작은 쪽으로 대입할 수 없다.
 // 그 이유는 element에서는 없는 메소드에는 HTMLParagraphElement에는 갖고있고 사용할 수 있어야 하기 때문이다.
-const recoveredTotal = $('.recovered') as HTMLParagraphElement;
-const lastUpdatedTime = $('.last-updated-time') as HTMLParagraphElement;
-const rankList = $('.rank-list') as HTMLOListElement;
-const deathsList = $('.deaths-list') as HTMLOListElement; // 기본적으로 querySelector를 이용하면 반환객체가 Element나 null타입으로 추론된다. 이때 null타입처리를 해야한다.
-const recoveredList = $('.recovered-list') as HTMLOListElement;
+const recoveredTotal = $<HTMLParagraphElement>('.recovered');
+const lastUpdatedTime = $<HTMLParagraphElement>('.last-updated-time');
+const rankList = $<HTMLOListElement>('.rank-list');
+const deathsList = $<HTMLOListElement>('.deaths-list'); // 기본적으로 querySelector를 이용하면 반환객체가 Element나 null타입으로 추론된다. 이때 null타입처리를 해야한다.
+const recoveredList = $<HTMLOListElement>('.recovered-list');
 const deathSpinner = createSpinnerElement('deaths-spinner');
 const recoveredSpinner = createSpinnerElement('recovered-spinner');
 
